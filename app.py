@@ -44,16 +44,6 @@ def booking_r(id_teacher, b_day, b_time):
 def req_r():
     return render_template('request.html')
 
-@app.route('/request_done/',  methods=['POST'])
-def request_parse_request():
-    answer_dict = {"goal": request.form["goal"], "time": request.form["time"], "clientName": request.form["clientName"],
-                   "clientPhone": request.form["clientPhone"]}
-
-    with open("request.json", "w") as f:
-        json.dump(answer_dict, f)
-
-    return render_template('request_done.html')
-
 @app.route('/booking_done/',  methods=['GET'])
 def booking_parse_request():
     answer_dict = {'clientPhone': request.args.get('clientPhone'), 'clientWeekday': request.args.get('clientWeekday'),
@@ -64,6 +54,17 @@ def booking_parse_request():
         json.dump(answer_dict, f)
 
     return render_template('booking_done.html', data_dict=answer_dict, days=day_dict)
+
+
+@app.route('/request_done/', methods=['POST'])
+def request_parse_request():
+    answer_dict = {"goal": request.form["goal"], "time": request.form["time"], "clientName": request.form["clientName"],
+                   "clientPhone": request.form["clientPhone"]}
+
+    with open("request.json", "w") as f:
+        json.dump(answer_dict, f)
+
+    return render_template('request_done.html', data_dict=answer_dict, days=day_dict, goals_data=data.goals)
 
 if __name__ == '__main__':
     app.run()
